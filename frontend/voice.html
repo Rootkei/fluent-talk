@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Voice Chat - Live Conversation</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 800px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 24px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .status-bar {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            padding: 20px;
+            background: rgba(102, 126, 234, 0.1);
+            border-bottom: 1px solid rgba(102, 126, 234, 0.2);
+        }
+
+        .status-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #ccc;
+            animation: pulse 2s infinite;
+        }
+
+        .status-dot.listening {
+            background: #4CAF50;
+        }
+
+        .status-dot.speaking {
+            background: #2196F3;
+        }
+
+        .status-dot.processing {
+            background: #FF9800;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+        .status-text {
+            font-size: 16px;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .main-content {
+            padding: 40px 30px;
+        }
+
+        .mic-container {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .mic-button {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: none;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            font-size: 48px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 24px rgba(102, 126, 234, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+        }
+
+        .mic-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 12px 32px rgba(102, 126, 234, 0.5);
+        }
+
+        .mic-button.active {
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            animation: pulse-mic 1.5s infinite;
+        }
+
+        @keyframes pulse-mic {
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.1);
+            }
+        }
+
+        .transcript-box {
+            background: #f5f5f5;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 30px;
+            min-height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .transcript-text {
+            font-size: 18px;
+            color: #333;
+            text-align: center;
+            font-style: italic;
+        }
+
+        .conversation-log {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 20px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .log-entry {
+            display: flex;
+            gap: 12px;
+            padding: 12px;
+            margin-bottom: 8px;
+            border-radius: 8px;
+            background: #f9f9f9;
+        }
+
+        .log-entry.user {
+            background: #e3f2fd;
+        }
+
+        .log-entry.ai {
+            background: #f3e5f5;
+        }
+
+        .log-entry.system {
+            background: #fff3e0;
+        }
+
+        .log-icon {
+            font-size: 20px;
+        }
+
+        .log-time {
+            font-size: 12px;
+            color: #999;
+            min-width: 50px;
+        }
+
+        .log-text {
+            flex: 1;
+            font-size: 14px;
+            color: #333;
+        }
+
+        .instructions {
+            text-align: center;
+            margin-top: 20px;
+            padding: 20px;
+            background: rgba(102, 126, 234, 0.05);
+            border-radius: 12px;
+        }
+
+        .instructions h3 {
+            font-size: 16px;
+            font-weight: 600;
+            color: #667eea;
+            margin-bottom: 12px;
+        }
+
+        .instructions ul {
+            list-style: none;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .instructions li {
+            margin: 8px 0;
+        }
+
+        .instructions li::before {
+            content: "✓ ";
+            color: #4CAF50;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎙️ AI Voice Chat</h1>
+            <p>Trò chuyện trực tiếp với AI bằng giọng nói</p>
+        </div>
+
+        <div class="status-bar">
+            <span class="status-dot" id="statusDot"></span>
+            <span class="status-text" id="statusText">Nhấn mic để bắt đầu</span>
+        </div>
+
+        <div class="main-content">
+            <div class="mic-container">
+                <button class="mic-button" id="micButton">
+                    🎤
+                </button>
+            </div>
+
+            <div class="transcript-box">
+                <p class="transcript-text" id="transcript">Bạn nói gì sẽ hiển thị ở đây...</p>
+            </div>
+
+            <div class="conversation-log" id="conversationLog">
+                <div class="log-entry system">
+                    <span class="log-icon">ℹ️</span>
+                    <span class="log-time">--:--</span>
+                    <span class="log-text">Chào mừng! Nhấn nút mic để bắt đầu trò chuyện.</span>
+                </div>
+            </div>
+
+            <div class="instructions">
+                <h3>Hướng dẫn sử dụng</h3>
+                <ul>
+                    <li>Nhấn nút mic để bắt đầu cuộc trò chuyện</li>
+                    <li>Nói tiếng Việt, AI sẽ nghe và trả lời bằng giọng nói</li>
+                    <li>Nhấn lại nút mic để dừng cuộc trò chuyện</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script src="app-voice.js"></script>
+</body>
+
+</html>
