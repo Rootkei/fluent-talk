@@ -20,8 +20,9 @@ func main() {
 	// Load configuration
 	cfg := config.Load()
 
-	// Initialize AI client
+	// Initialize AI clients
 	aiClient := ai.NewGroqClient(cfg)
+	whisperClient := ai.NewGroqWhisperClient(cfg)
 
 	// Initialize use cases
 	chatUseCase := chat.NewChatUseCase(aiClient)
@@ -33,13 +34,16 @@ func main() {
 	// Initialize handlers
 	wsHandler := handler.NewWebSocketHandler(hub, chatUseCase, cfg)
 	healthHandler := handler.NewHealthHandler()
+	audioHandler := handler.NewAudioHandler(whisperClient)
 
 	// Setup routes
 	http.HandleFunc("/ws", wsHandler.Handle)
 	http.HandleFunc("/health", healthHandler.Handle)
+	http.HandleFunc("/api/transcribe", audioHandler.HandleTranscribe)
 
 	// Start server
 	appLogger.Info("Server starting on port " + cfg.Port)
+	appLogger.Info("Endpoints: /ws, /health, /api/transcribe")
 	if err := http.ListenAndServe(":"+cfg.Port, nil); err != nil {
 		log.Fatal("ListenAndServe error:", err)
 	}

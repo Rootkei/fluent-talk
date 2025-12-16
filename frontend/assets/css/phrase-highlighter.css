@@ -1,0 +1,318 @@
+/* Phrase Highlighter Styles */
+
+/* Highlighted Phrase in Messages */
+.highlighted-phrase {
+    background: linear-gradient(135deg, rgba(251, 191, 36, 0.2) 0%, rgba(245, 158, 11, 0.2) 100%);
+    border-bottom: 2px solid rgba(251, 191, 36, 0.6);
+    padding: 2px 6px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 600;
+    position: relative;
+}
+
+.highlighted-phrase:hover {
+    background: linear-gradient(135deg, rgba(251, 191, 36, 0.35) 0%, rgba(245, 158, 11, 0.35) 100%);
+    border-bottom-color: rgba(251, 191, 36, 0.9);
+    transform: translateY(-1px);
+}
+
+.highlighted-phrase:hover::after {
+    content: 'Click to save';
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.9);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: 11px;
+    white-space: nowrap;
+    margin-bottom: 4px;
+    z-index: 1000;
+}
+
+.highlighted-phrase.saved {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.2) 0%, rgba(5, 150, 105, 0.2) 100%);
+    border-bottom-color: rgba(16, 185, 129, 0.8);
+}
+
+/* Phrase Bank Panel */
+.phrase-bank-panel {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    max-width: 600px;
+    max-height: 85vh;
+    background: rgba(15, 15, 35, 0.98);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 24px;
+    box-shadow:
+        0 25px 70px rgba(0, 0, 0, 0.6),
+        0 10px 30px rgba(0, 0, 0, 0.4);
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    animation: modalSlideUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.phrase-bank-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--space-lg) var(--space-xl);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    flex-shrink: 0;
+}
+
+.phrase-bank-header h3 {
+    font-size: 20px;
+    font-weight: 700;
+    margin: 0;
+    color: white;
+}
+
+.phrase-bank-close {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    font-size: 18px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.phrase-bank-close:hover {
+    background: rgba(239, 68, 68, 0.8);
+    transform: rotate(90deg);
+}
+
+.phrase-bank-search {
+    padding: var(--space-md) var(--space-xl);
+    flex-shrink: 0;
+}
+
+.phrase-bank-search input {
+    width: 100%;
+    padding: 12px 16px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    background: rgba(255, 255, 255, 0.05);
+    color: white;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.phrase-bank-search input:focus {
+    outline: none;
+    border-color: rgba(251, 191, 36, 0.6);
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.phrase-bank-search input::placeholder {
+    color: rgba(255, 255, 255, 0.4);
+}
+
+.phrase-bank-categories {
+    display: flex;
+    gap: var(--space-sm);
+    padding: 0 var(--space-xl) var(--space-md);
+    overflow-x: auto;
+    flex-shrink: 0;
+}
+
+.category-btn {
+    padding: 8px 16px;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    background: rgba(255, 255, 255, 0.05);
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+}
+
+.category-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.25);
+}
+
+.category-btn.active {
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    border-color: transparent;
+    color: white;
+}
+
+.phrase-bank-content {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: var(--space-md) var(--space-xl) var(--space-xl);
+    max-height: calc(85vh - 250px);
+}
+
+.phrase-bank-content::-webkit-scrollbar {
+    width: 8px;
+}
+
+.phrase-bank-content::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 4px;
+}
+
+.phrase-bank-content::-webkit-scrollbar-thumb {
+    background: rgba(251, 191, 36, 0.4);
+    border-radius: 4px;
+}
+
+.phrase-bank-content::-webkit-scrollbar-thumb:hover {
+    background: rgba(251, 191, 36, 0.6);
+}
+
+.empty-phrases {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-2xl);
+    text-align: center;
+}
+
+.empty-phrases-icon {
+    font-size: 64px;
+    margin-bottom: var(--space-md);
+    opacity: 0.5;
+}
+
+.empty-phrases p {
+    font-size: 16px;
+    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: var(--space-sm);
+}
+
+.empty-phrases small {
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.phrase-item {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: var(--space-md);
+    margin-bottom: var(--space-sm);
+    transition: all 0.3s ease;
+}
+
+.phrase-item:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(251, 191, 36, 0.3);
+    transform: translateX(4px);
+}
+
+.phrase-text {
+    font-size: 16px;
+    font-weight: 700;
+    color: #fbbf24;
+    margin-bottom: var(--space-xs);
+}
+
+.phrase-context {
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.6);
+    font-style: italic;
+    margin-bottom: var(--space-sm);
+}
+
+.phrase-meta {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    flex-wrap: wrap;
+}
+
+.phrase-category,
+.phrase-scenario {
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.phrase-category {
+    background: rgba(99, 102, 241, 0.2);
+    color: #a5b4fc;
+}
+
+.phrase-scenario {
+    background: rgba(16, 185, 129, 0.2);
+    color: #6ee7b7;
+}
+
+.phrase-delete {
+    margin-left: auto;
+    padding: 6px 10px;
+    border-radius: 8px;
+    border: none;
+    background: rgba(239, 68, 68, 0.2);
+    color: #fca5a5;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.phrase-delete:hover {
+    background: rgba(239, 68, 68, 0.4);
+    transform: scale(1.1);
+}
+
+/* Light Theme - Phrase Bank */
+body.light-theme .phrase-bank-panel {
+    background: rgba(255, 255, 255, 0.98);
+    border-color: rgba(102, 126, 234, 0.2);
+}
+
+body.light-theme .phrase-bank-header h3 {
+    color: #1a202c;
+}
+
+body.light-theme .phrase-bank-search input {
+    background: rgba(102, 126, 234, 0.08);
+    border-color: rgba(102, 126, 234, 0.3);
+    color: #1a202c;
+}
+
+body.light-theme .phrase-bank-search input::placeholder {
+    color: rgba(0, 0, 0, 0.4);
+}
+
+body.light-theme .category-btn {
+    background: rgba(102, 126, 234, 0.1);
+    border-color: rgba(102, 126, 234, 0.3);
+    color: #667eea;
+}
+
+body.light-theme .phrase-item {
+    background: rgba(102, 126, 234, 0.05);
+    border-color: rgba(102, 126, 234, 0.15);
+}
+
+body.light-theme .phrase-text {
+    color: #d97706;
+}
+
+body.light-theme .phrase-context {
+    color: #4a5568;
+}
+
+body.light-theme .highlighted-phrase {
+    background: linear-gradient(135deg, rgba(251, 191, 36, 0.25) 0%, rgba(245, 158, 11, 0.25) 100%);
+}

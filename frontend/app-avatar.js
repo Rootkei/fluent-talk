@@ -320,40 +320,98 @@ class WebSpeechVoice {
         this.synthesis = window.speechSynthesis;
         this.state = VoiceState.IDLE;
         this.speechRecognizedCallbacks = [];
+        this.interimTranscriptCallbacks = []; // NEW: For interim results
         this.stateChangeCallbacks = [];
         this.initRecognition();
     }
 
     initRecognition() {
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-        if (!SpeechRecognition) return;
+        if (!SpeechRecognition) {
+            console.error('Speech Recognition not supported in this browser');
+            return;
+        }
 
         this.recognition = new SpeechRecognition();
-        this.recognition.lang = CONFIG.VOICE_LANG;
+
+        // Enhanced settings for better Vietnamese recognition
+        this.recognition.lang = 'vi-VN';
         this.recognition.continuous = true;
-        this.recognition.interimResults = false;
+        this.recognition.interimResults = true; // Enable interim results for better feedback
+        this.recognition.maxAlternatives = 3; // Get multiple alternatives for better accuracy
 
         this.recognition.onstart = () => {
+            console.log('🎤 Speech recognition started');
             this.updateState(VoiceState.LISTENING);
         };
 
         this.recognition.onresult = (event) => {
-            const last = event.results.length - 1;
-            const transcript = event.results[last][0].transcript;
-            this.speechRecognizedCallbacks.forEach(cb => cb(transcript));
+            let interimTranscript = '';
+            let finalTranscript = '';
+
+            // Process all results
+            for (let i = event.resultIndex; i < event.results.length; i++) {
+                const transcript = event.results[i][0].transcript;
+
+                if (event.results[i].isFinal) {
+                    finalTranscript += transcript;
+                    console.log('✅ Final transcript:', transcript);
+                    console.log('Confidence:', event.results[i][0].confidence);
+
+                    // Only send final results
+                    this.speechRecognizedCallbacks.forEach(cb => cb(transcript.trim()));
+                } else {
+                    interimTranscript += transcript;
+                    console.log('⏳ Interim:', transcript);
+
+                    // Send interim results for visual feedback
+                    this.interimTranscriptCallbacks.forEach(cb => cb(transcript));
+                }
+            }
         };
 
         this.recognition.onerror = (event) => {
-            if (event.error === 'no-speech') {
-                this.startListening();
+            console.error('Speech recognition error:', event.error);
+
+            switch (event.error) {
+                case 'no-speech':
+                    console.log('No speech detected, continuing...');
+                    // Don't restart, just continue listening
+                    break;
+                case 'audio-capture':
+                    console.error('No microphone found or permission denied');
+                    this.updateState(VoiceState.IDLE);
+                    break;
+                case 'not-allowed':
+                    console.error('Microphone permission denied');
+                    this.updateState(VoiceState.IDLE);
+                    break;
+                case 'network':
+                    console.error('Network error, retrying...');
+                    setTimeout(() => this.startListening(), 1000);
+                    break;
+                default:
+                    console.error('Unknown error:', event.error);
             }
         };
 
         this.recognition.onend = () => {
+            console.log('Speech recognition ended');
+
+            // Auto-restart if still in listening mode
             if (this.state === VoiceState.LISTENING) {
-                this.recognition.start();
+                console.log('Restarting recognition...');
+                setTimeout(() => {
+                    try {
+                        this.recognition.start();
+                    } catch (error) {
+                        console.error('Failed to restart:', error);
+                    }
+                }, 100);
             }
         };
+
+        console.log('✅ Speech recognition initialized for Vietnamese (vi-VN)');
     }
 
     startListening() {
@@ -401,6 +459,10 @@ class WebSpeechVoice {
 
     onSpeechRecognized(callback) {
         this.speechRecognizedCallbacks.push(callback);
+    }
+
+    onInterimTranscript(callback) {
+        this.interimTranscriptCallbacks.push(callback);
     }
 
     onStateChange(callback) {
@@ -456,8 +518,16 @@ class VoiceAvatarController {
     }
 
     setupServiceHandlers() {
+        // Handle final recognized speech
         this.voice.onSpeechRecognized((text) => {
             this.handleUserSpeech(text);
+        });
+
+        // Handle interim results for visual feedback
+        this.voice.onInterimTranscript((text) => {
+            this.transcript.textContent = text + ' ...';
+            this.transcript.style.opacity = '0.7';
+            this.transcript.style.fontStyle = 'italic';
         });
 
         this.voice.onStateChange((state) => {
@@ -501,6 +571,8 @@ class VoiceAvatarController {
 
     handleUserSpeech(text) {
         this.transcript.textContent = text;
+        this.transcript.style.opacity = '1';
+        this.transcript.style.fontStyle = 'normal';
         this.addToLog('user', text);
 
         const message = {

@@ -1,0 +1,396 @@
+/* Responsive Design - Tablet & Mobile */
+
+/* ========== Tablet (768px - 1024px) ========== */
+@media (max-width: 1024px) {
+    .container {
+        max-width: 100%;
+        height: 100vh;
+        border-radius: 0;
+    }
+
+    .header h1 {
+        font-size: 22px;
+    }
+
+    .header p {
+        font-size: 13px;
+    }
+
+    .chat-messages {
+        padding: var(--space-lg);
+    }
+
+    .message-bubble.user .message-content,
+    .message-bubble.ai .message-content {
+        max-width: 75%;
+        font-size: 14px;
+    }
+
+    .mic-button-chat {
+        width: 65px;
+        height: 65px;
+        font-size: 30px;
+    }
+
+    .waveform-canvas {
+        width: 250px;
+        height: 50px;
+    }
+
+    .voice-level-bar {
+        width: 180px;
+    }
+}
+
+/* ========== Mobile (< 768px) ========== */
+@media (max-width: 768px) {
+    :root {
+        --space-xs: 6px;
+        --space-sm: 10px;
+        --space-md: 14px;
+        --space-lg: 18px;
+        --space-xl: 24px;
+    }
+
+    .container {
+        border-radius: 0;
+        height: 100vh;
+        max-width: 100%;
+    }
+
+    /* Header */
+    .header {
+        padding: var(--space-md) var(--space-lg);
+    }
+
+    .header h1 {
+        font-size: 20px;
+        margin-bottom: 4px;
+    }
+
+    .header p {
+        font-size: 12px;
+    }
+
+    /* Status Bar */
+    .status-bar {
+        padding: var(--space-sm);
+        gap: var(--space-sm);
+    }
+
+    .status-text {
+        font-size: 13px;
+    }
+
+    .status-dot {
+        width: 10px;
+        height: 10px;
+    }
+
+    /* Chat Messages */
+    .chat-messages {
+        padding: var(--space-md);
+        gap: var(--space-sm);
+    }
+
+    .message-bubble.user .message-content,
+    .message-bubble.ai .message-content {
+        max-width: 85%;
+        padding: var(--space-sm) var(--space-md);
+        font-size: 14px;
+        line-height: 1.5;
+    }
+
+    .message-content {
+        font-size: 14px;
+    }
+
+    .message-timestamp {
+        font-size: 10px;
+        margin-top: 2px;
+    }
+
+    /* System messages */
+    .message-bubble.system .message-content {
+        padding: var(--space-xs) var(--space-md);
+        font-size: 12px;
+    }
+
+    /* Chat Input Area */
+    .chat-input-area {
+        padding: var(--space-md);
+    }
+
+    .mic-button-chat {
+        width: 60px;
+        height: 60px;
+        font-size: 28px;
+    }
+
+    .keyboard-hint {
+        display: none;
+        /* Hide on mobile */
+    }
+
+    /* Interim Transcript */
+    .interim-transcript {
+        bottom: 100px;
+        max-width: 90%;
+        padding: 12px 18px;
+    }
+
+    .interim-text {
+        font-size: 14px;
+    }
+
+    /* Voice Level */
+    .voice-level-container {
+        bottom: 85px;
+    }
+
+    .voice-level-bar {
+        width: 150px;
+        height: 6px;
+    }
+
+    .voice-level-text {
+        font-size: 11px;
+    }
+
+    /* Waveform */
+    .waveform-canvas {
+        width: 200px;
+        height: 40px;
+        bottom: 80px;
+    }
+
+    /* Scroll Button */
+    .scroll-bottom-btn {
+        bottom: 85px;
+        right: 16px;
+        padding: 10px 16px;
+        font-size: 13px;
+        border-radius: 20px;
+    }
+
+    /* Typing Indicator */
+    .typing-indicator {
+        padding: 10px 14px;
+    }
+
+    .typing-dot {
+        width: 7px;
+        height: 7px;
+    }
+
+    /* Error Message */
+    .error-message {
+        padding: 10px 14px;
+        font-size: 13px;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .retry-button {
+        margin-top: 8px;
+        width: 100%;
+    }
+}
+
+/* ========== Small Mobile (< 480px) ========== */
+@media (max-width: 480px) {
+    .header h1 {
+        font-size: 18px;
+    }
+
+    .header p {
+        font-size: 11px;
+    }
+
+    .chat-messages {
+        padding: var(--space-sm);
+    }
+
+    .message-bubble.user .message-content,
+    .message-bubble.ai .message-content {
+        max-width: 90%;
+        padding: 10px 14px;
+        font-size: 13px;
+    }
+
+    .mic-button-chat {
+        width: 55px;
+        height: 55px;
+        font-size: 26px;
+    }
+
+    .interim-transcript {
+        bottom: 90px;
+        padding: 10px 16px;
+    }
+
+    .interim-text {
+        font-size: 13px;
+    }
+
+    .voice-level-bar {
+        width: 120px;
+    }
+
+    .waveform-canvas {
+        width: 160px;
+        height: 35px;
+    }
+
+    .scroll-bottom-btn {
+        bottom: 75px;
+        right: 12px;
+        padding: 8px 14px;
+        font-size: 12px;
+    }
+}
+
+/* ========== Landscape Mobile ========== */
+@media (max-width: 768px) and (orientation: landscape) {
+    .container {
+        height: 100vh;
+    }
+
+    .header {
+        padding: var(--space-sm) var(--space-lg);
+    }
+
+    .header h1 {
+        font-size: 18px;
+    }
+
+    .header p {
+        display: none;
+        /* Hide subtitle in landscape */
+    }
+
+    .status-bar {
+        padding: var(--space-xs) var(--space-md);
+    }
+
+    .chat-messages {
+        padding: var(--space-sm) var(--space-md);
+    }
+
+    .chat-input-area {
+        padding: var(--space-sm) var(--space-md);
+    }
+
+    .mic-button-chat {
+        width: 50px;
+        height: 50px;
+        font-size: 24px;
+    }
+
+    .interim-transcript {
+        bottom: 70px;
+        padding: 8px 14px;
+    }
+
+    .voice-level-container {
+        bottom: 65px;
+    }
+
+    .waveform-canvas {
+        bottom: 65px;
+        width: 150px;
+        height: 30px;
+    }
+}
+
+/* ========== Touch Optimizations ========== */
+@media (hover: none) and (pointer: coarse) {
+
+    /* Larger touch targets */
+    .mic-button-chat {
+        min-width: 60px;
+        min-height: 60px;
+    }
+
+    .scroll-bottom-btn {
+        min-height: 44px;
+        min-width: 44px;
+    }
+
+    .retry-button {
+        min-height: 44px;
+        padding: 10px 16px;
+    }
+
+    /* Remove hover effects on touch devices */
+    .mic-button-chat:hover {
+        transform: none;
+    }
+
+    .message-bubble:hover {
+        transform: none;
+    }
+
+    /* Better tap feedback */
+    .mic-button-chat:active {
+        transform: scale(0.95);
+    }
+
+    .scroll-bottom-btn:active {
+        transform: scale(0.95);
+    }
+}
+
+/* ========== High DPI Displays ========== */
+@media (-webkit-min-device-pixel-ratio: 2),
+(min-resolution: 192dpi) {
+    .waveform-canvas {
+        image-rendering: -webkit-optimize-contrast;
+        image-rendering: crisp-edges;
+    }
+}
+
+/* ========== Reduced Motion ========== */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+
+    .waveform-canvas {
+        display: none;
+    }
+
+    .typing-dot {
+        animation: none;
+    }
+}
+
+/* ========== Dark Mode Support ========== */
+@media (prefers-color-scheme: dark) {
+    /* Already dark by default, but can add overrides if needed */
+}
+
+/* ========== Print Styles ========== */
+@media print {
+
+    .header,
+    .status-bar,
+    .chat-input-area,
+    .interim-transcript,
+    .voice-level-container,
+    .waveform-canvas,
+    .scroll-bottom-btn {
+        display: none !important;
+    }
+
+    .chat-messages {
+        height: auto !important;
+        overflow: visible !important;
+    }
+
+    .message-bubble {
+        page-break-inside: avoid;
+    }
+}

@@ -3,46 +3,316 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Voice Chat with 3D Avatar</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="assets/css/avatar-enhanced.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#0a0a1a">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>AI Voice Chat - English Practice</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/premium.css">
+    <link rel="stylesheet" href="assets/css/ux-features.css">
+    <link rel="stylesheet" href="assets/css/responsive.css">
+    <link rel="stylesheet" href="assets/css/advanced-features.css">
+    <link rel="stylesheet" href="assets/css/polish.css">
+    <link rel="stylesheet" href="assets/css/modal.css">
+    <link rel="stylesheet" href="assets/css/toast.css">
+    <link rel="stylesheet" href="assets/css/phrase-highlighter.css">
+    <link rel="stylesheet" href="assets/css/scenarios.css">
 </head>
 
 <body>
     <div class="container">
         <div class="header">
-            <h1>🎭 AI Voice Chat with 3D Avatar</h1>
-            <p>Trò chuyện với AI qua giọng nói và xem avatar 3D tương tác</p>
+            <h1>🎭 AI Voice Chat - English Practice</h1>
+            <p>Powered by Groq Whisper API • Practice English conversation</p>
         </div>
 
+        <!-- Search Bar -->
+        <div class="search-bar" id="searchBar" style="display: none;">
+            <input type="text" id="searchInput" placeholder="Search messages...">
+            <button class="search-close" id="searchClose">✕</button>
+        </div>
+
+        <!-- Settings Panel -->
+        <div class="settings-panel" id="settingsPanel" style="display: none;">
+            <div class="settings-header">
+                <h3>Settings</h3>
+                <button class="settings-close" id="settingsClose">✕</button>
+            </div>
+            <div class="settings-content">
+                <!-- Topic Selection -->
+                <div class="setting-item">
+                    <label>Conversation Topic</label>
+                    <select id="topicSelect" class="setting-select">
+                        <option value="general">General Conversation</option>
+                        <option value="daily">Daily Life</option>
+                        <option value="work">Work & Business</option>
+                        <option value="travel">Travel & Tourism</option>
+                        <option value="food">Food & Cooking</option>
+                        <option value="technology">Technology</option>
+                        <option value="health">Health & Fitness</option>
+                        <option value="education">Education</option>
+                        <option value="entertainment">Entertainment</option>
+                        <option value="sports">Sports</option>
+                        <option value="family">Family & Relationships</option>
+                        <option value="hobbies">Hobbies & Interests</option>
+                    </select>
+                </div>
+
+                <!-- Level Selection -->
+                <div class="setting-item">
+                    <label>English Level</label>
+                    <select id="levelSelect" class="setting-select">
+                        <option value="A1">A1 - Beginner</option>
+                        <option value="A2">A2 - Elementary</option>
+                        <option value="B1">B1 - Intermediate</option>
+                        <option value="B2" selected>B2 - Upper Intermediate</option>
+                        <option value="C1">C1 - Advanced</option>
+                        <option value="C2">C2 - Proficient</option>
+                    </select>
+                </div>
+
+                <!-- Voice Gender Selection -->
+                <div class="setting-item">
+                    <label>AI Voice Gender</label>
+                    <div class="voice-gender-control">
+                        <button class="gender-btn active" data-gender="female">
+                            👩 Female
+                        </button>
+                        <button class="gender-btn" data-gender="male">
+                            👨 Male
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Speech Rate -->
+                <div class="setting-item">
+                    <label>Speech Rate</label>
+                    <div class="speech-rate-control">
+                        <button class="rate-btn" data-rate="0.75">Slow</button>
+                        <button class="rate-btn active" data-rate="1.0">Normal</button>
+                        <button class="rate-btn" data-rate="1.25">Fast</button>
+                    </div>
+                    <input type="range" id="speechRateSlider" min="0.5" max="2.0" step="0.1" value="1.0">
+                    <span class="rate-value">1.0x</span>
+                </div>
+
+                <!-- Auto-scroll Toggle -->
+                <div class="setting-item">
+                    <label>
+                        <input type="checkbox" id="autoScrollToggle" checked>
+                        Auto-scroll to new messages
+                    </label>
+                </div>
+
+                <!-- Sound Effects Toggle -->
+                <div class="setting-item">
+                    <label>
+                        <input type="checkbox" id="soundEffectsToggle" checked>
+                        Sound effects
+                    </label>
+                </div>
+            </div>
+        </div>
+        <!-- Status Bar -->
         <div class="status-bar">
-            <span class="status-dot" id="statusDot"></span>
-            <span class="status-text" id="statusText">Đang tải avatar...</span>
+            <div class="status-left">
+                <div class="status-dot" id="statusDot"></div>
+                <span class="status-text" id="statusText">Click mic to start</span>
+            </div>
+            <div class="status-right">
+                <span class="status-info" id="topicInfo">General</span>
+                <span class="status-separator">•</span>
+                <span class="status-info" id="levelInfo">B2</span>
+            </div>
+        </div>
+
+        <!-- Confirmation Modal -->
+        <div class="modal-overlay" id="confirmModal" style="display: none;">
+            <div class="modal-content">
+                <div class="modal-icon">⚠️</div>
+                <h3 class="modal-title">Clear Chat History?</h3>
+                <p class="modal-message">This will delete all messages in the conversation. This action cannot be
+                    undone.</p>
+                <div class="modal-actions">
+                    <button class="modal-btn modal-btn-cancel" id="modalCancel">Cancel</button>
+                    <button class="modal-btn modal-btn-confirm" id="modalConfirm">Clear All</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Phrase Bank Panel -->
+        <div class="phrase-bank-panel" id="phraseBankPanel" style="display: none;">
+            <div class="phrase-bank-header">
+                <h3>💡 My Phrases</h3>
+                <button class="phrase-bank-close" id="phraseBankClose">✕</button>
+            </div>
+            <div class="phrase-bank-search">
+                <input type="text" id="phraseSearchInput" placeholder="Search phrases...">
+            </div>
+            <div class="phrase-bank-categories">
+                <button class="category-btn active" data-category="all">All</button>
+                <button class="category-btn" data-category="expressions">Expressions</button>
+                <button class="category-btn" data-category="questions">Questions</button>
+                <button class="category-btn" data-category="polite">Polite Forms</button>
+            </div>
+            <div class="phrase-bank-content" id="phraseBankContent">
+                <div class="empty-phrases">
+                    <div class="empty-phrases-icon">💡</div>
+                    <p>No phrases saved yet</p>
+                    <small>Click on highlighted phrases in AI responses to save them</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scenarios Panel -->
+        <div class="scenarios-panel" id="scenariosPanel" style="display: none;">
+            <div class="scenarios-header">
+                <h3>🎭 Role-Play Scenarios</h3>
+                <button class="scenarios-close" id="scenariosClose">✕</button>
+            </div>
+            <div class="scenarios-content">
+                <div class="scenario-card" data-scenario="restaurant">
+                    <div class="scenario-icon">🍽️</div>
+                    <h4>Restaurant</h4>
+                    <p>Order food and drinks</p>
+                    <button class="scenario-start-btn">Start</button>
+                </div>
+                <div class="scenario-card" data-scenario="airport">
+                    <div class="scenario-icon">✈️</div>
+                    <h4>Airport</h4>
+                    <p>Check-in, flight info</p>
+                    <button class="scenario-start-btn">Start</button>
+                </div>
+                <div class="scenario-card" data-scenario="interview">
+                    <div class="scenario-icon">💼</div>
+                    <h4>Job Interview</h4>
+                    <p>Answer questions</p>
+                    <button class="scenario-start-btn">Start</button>
+                </div>
+                <div class="scenario-card" data-scenario="shopping">
+                    <div class="scenario-icon">🛍️</div>
+                    <h4>Shopping</h4>
+                    <p>Ask prices, try items</p>
+                    <button class="scenario-start-btn">Start</button>
+                </div>
+                <div class="scenario-card" data-scenario="hotel">
+                    <div class="scenario-icon">🏨</div>
+                    <h4>Hotel</h4>
+                    <p>Check-in, room service</p>
+                    <button class="scenario-start-btn">Start</button>
+                </div>
+                <div class="scenario-card" data-scenario="doctor">
+                    <div class="scenario-icon">🏥</div>
+                    <h4>Doctor Visit</h4>
+                    <p>Describe symptoms</p>
+                    <button class="scenario-start-btn">Start</button>
+                </div>
+                <div class="scenario-card" data-scenario="bank">
+                    <div class="scenario-icon">🏦</div>
+                    <h4>Bank</h4>
+                    <p>Open account, transfer</p>
+                    <button class="scenario-start-btn">Start</button>
+                </div>
+                <div class="scenario-card" data-scenario="taxi">
+                    <div class="scenario-icon">🚕</div>
+                    <h4>Taking Taxi</h4>
+                    <p>Give directions, pay</p>
+                    <button class="scenario-start-btn">Start</button>
+                </div>
+                <div class="scenario-card" data-scenario="phone">
+                    <div class="scenario-icon">📞</div>
+                    <h4>Phone Call</h4>
+                    <p>Make appointments</p>
+                    <button class="scenario-start-btn">Start</button>
+                </div>
+                <div class="scenario-card" data-scenario="meeting">
+                    <div class="scenario-icon">👥</div>
+                    <h4>Business Meeting</h4>
+                    <p>Present ideas, discuss</p>
+                    <button class="scenario-start-btn">Start</button>
+                </div>
+                <div class="scenario-card" data-scenario="party">
+                    <div class="scenario-icon">🎉</div>
+                    <h4>Social Party</h4>
+                    <p>Small talk, networking</p>
+                    <button class="scenario-start-btn">Start</button>
+                </div>
+                <div class="scenario-card" data-scenario="complaint">
+                    <div class="scenario-icon">😤</div>
+                    <h4>Making Complaint</h4>
+                    <p>Express dissatisfaction</p>
+                    <button class="scenario-start-btn">Start</button>
+                </div>
+            </div>
         </div>
 
         <div class="main-content">
-            <div class="avatar-section">
-                <canvas id="avatarCanvas"></canvas>
-                <div class="controls">
-                    <button class="mic-button" id="micButton" disabled>
-                        🎤
-                    </button>
-                </div>
-            </div>
-
-            <div class="chat-section">
-                <div class="transcript-box">
-                    <p class="transcript-text" id="transcript">Bạn nói gì sẽ hiển thị ở đây...</p>
+            <div class="chat-container">
+                <!-- Interim transcript overlay -->
+                <div class="interim-transcript" id="interimTranscript" style="display: none;">
+                    <div class="interim-text"></div>
                 </div>
 
-                <div class="conversation-log" id="conversationLog">
-                    <div class="log-entry system">
-                        <span class="log-icon">ℹ️</span>
-                        <span class="log-time">--:--</span>
-                        <span class="log-text">Đang tải avatar 3D...</span>
+                <div class="chat-messages" id="chatMessages">
+                    <!-- Empty State -->
+                    <div class="empty-state" id="emptyState">
+                        <div class="empty-icon">🎤</div>
+                        <h2>Start Your English Practice</h2>
+                        <p>Click the microphone button to begin a conversation</p>
+                        <div class="empty-features">
+                            <div class="feature-item">
+                                <span class="feature-icon">🎯</span>
+                                <span>Choose your topic & level</span>
+                            </div>
+                            <div class="feature-item">
+                                <span class="feature-icon">🗣️</span>
+                                <span>Practice speaking naturally</span>
+                            </div>
+                            <div class="feature-item">
+                                <span class="feature-icon">🎧</span>
+                                <span>Listen to AI responses</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Scroll to bottom button -->
+                <button class="scroll-bottom-btn" id="scrollBottomBtn" style="display: none;">
+                    ↓ New message
+                </button>
+
+                <div class="chat-input-area">
+                    <!-- Voice level indicator -->
+                    <div class="voice-level-container" id="voiceLevelContainer" style="display: none;">
+                        <div class="voice-level-bar">
+                            <div class="voice-level-fill" id="voiceLevelFill"></div>
+                        </div>
+                        <span class="voice-level-text">Volume</span>
+                    </div>
+
+                    <!-- Waveform visualizer -->
+                    <canvas id="waveformCanvas" class="waveform-canvas" style="display: none;"></canvas>
+
+                    <!-- Controls Row (Mic + Toolbar) -->
+                    <div class="controls-row">
+                        <button class="toolbar-btn-bottom" id="searchBtn" title="Search (Ctrl+F)">🔍</button>
+                        <button class="toolbar-btn-bottom" id="phraseBankBtn" title="My Phrases">💡</button>
+                        <button class="toolbar-btn-bottom" id="scenariosBtn" title="Role-Play">🎭</button>
+
+                        <!-- Mic Button (Position 4 - Center) -->
+                        <button class="mic-button-chat" id="micButton" disabled>
+                            🎤
+                        </button>
+
+                        <button class="toolbar-btn-bottom" id="clearBtn" title="Clear Chat">🗑️</button>
+                        <button class="toolbar-btn-bottom" id="themeBtn" title="Toggle theme">
+                            🌓
+                        </button>
+                        <button class="toolbar-btn-bottom" id="settingsBtn" title="Settings">
+                            ⚙️
+                        </button>
                     </div>
                 </div>
             </div>
@@ -59,7 +329,11 @@
         }
     }
     </script>
-    <script type="module" src="app-avatar.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="app-premium.js"></script>
+    <script src="assets/js/advanced-features.js"></script>
+    <script src="assets/js/polish.js"></script>
+    <script src="assets/js/phrase-scenarios.js"></script>
 </body>
 
 </html>
