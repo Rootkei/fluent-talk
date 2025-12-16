@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Chat - Groq Live</title>
+    <link rel="stylesheet" href="assets/css/main.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container">
+        <div class="chat-wrapper">
+            <!-- Header -->
+            <div class="chat-header">
+                <div class="header-content">
+                    <div class="logo-section">
+                        <div class="logo-icon">
+                            <svg width="32" height="32" viewBox="0 0 32 32" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path d="M16 4L4 10L16 16L28 10L16 4Z" fill="url(#gradient1)" />
+                                <path d="M4 16L16 22L28 16" stroke="url(#gradient2)" stroke-width="2"
+                                    stroke-linecap="round" />
+                                <path d="M4 22L16 28L28 22" stroke="url(#gradient3)" stroke-width="2"
+                                    stroke-linecap="round" />
+                                <defs>
+                                    <linearGradient id="gradient1" x1="4" y1="4" x2="28" y2="16"
+                                        gradientUnits="userSpaceOnUse">
+                                        <stop stop-color="#667eea" />
+                                        <stop offset="1" stop-color="#764ba2" />
+                                    </linearGradient>
+                                    <linearGradient id="gradient2" x1="4" y1="16" x2="28" y2="16"
+                                        gradientUnits="userSpaceOnUse">
+                                        <stop stop-color="#f093fb" />
+                                        <stop offset="1" stop-color="#f5576c" />
+                                    </linearGradient>
+                                    <linearGradient id="gradient3" x1="4" y1="22" x2="28" y2="22"
+                                        gradientUnits="userSpaceOnUse">
+                                        <stop stop-color="#4facfe" />
+                                        <stop offset="1" stop-color="#00f2fe" />
+                                    </linearGradient>
+                                </defs>
+                            </svg>
+                        </div>
+                        <div class="title-section">
+                            <h1>Groq AI Chat</h1>
+                            <p class="subtitle">Powered by Llama 3.3 70B</p>
+                        </div>
+                    </div>
+                    <div class="status-indicator">
+                        <span class="status-dot" id="statusDot"></span>
+                        <span class="status-text" id="statusText">Connecting...</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Messages Container -->
+            <div class="messages-container" id="messagesContainer">
+                <div class="welcome-message">
+                    <div class="welcome-icon">👋</div>
+                    <h2>Chào mừng đến với Groq AI Chat!</h2>
+                    <p>Bắt đầu cuộc trò chuyện bằng cách gửi tin nhắn bên dưới.</p>
+                </div>
+            </div>
+
+            <!-- Input Area -->
+            <div class="input-area">
+                <div class="input-wrapper">
+                    <button id="micButton" class="mic-button" title="Nhấn để nói">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                d="M12 1C10.34 1 9 2.34 9 4V12C9 13.66 10.34 15 12 15C13.66 15 15 13.66 15 12V4C15 2.34 13.66 1 12 1Z"
+                                fill="currentColor" />
+                            <path
+                                d="M19 10V12C19 15.87 15.87 19 12 19C8.13 19 5 15.87 5 12V10H3V12C3 16.97 7.03 21 12 21C16.97 21 21 16.97 21 12V10H19Z"
+                                fill="currentColor" />
+                            <path d="M11 22H13V24H11V22Z" fill="currentColor" />
+                        </svg>
+                    </button>
+                    <textarea id="messageInput" placeholder="Nhập tin nhắn hoặc nhấn mic để nói..." rows="1"></textarea>
+                    <button id="speakerButton" class="speaker-button" title="Bật/tắt giọng nói AI">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M3 9V15H7L12 20V4L7 9H3Z" fill="currentColor" />
+                            <path d="M16.5 12C16.5 10.23 15.48 8.71 14 7.97V16.02C15.48 15.29 16.5 13.77 16.5 12Z"
+                                fill="currentColor" />
+                            <path
+                                d="M14 3.23V5.29C16.89 6.15 19 8.83 19 12C19 15.17 16.89 17.85 14 18.71V20.77C18.01 19.86 21 16.28 21 12C21 7.72 18.01 4.14 14 3.23Z"
+                                fill="currentColor" />
+                        </svg>
+                    </button>
+                    <button id="sendButton" class="send-button" disabled>
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M22 2L11 13" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" />
+                            <path d="M22 2L15 22L11 13L2 9L22 2Z" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                    </button>
+                </div>
+                <div class="voice-status" id="voiceStatus" style="display: none;">
+                    <span class="recording-dot"></span>
+                    <span class="recording-text">Đang nghe...</span>
+                </div>
+                <div class="input-hint">
+                    <span>Nhấn Enter để gửi, Shift + Enter để xuống dòng, hoặc nhấn 🎤 để nói</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Use bundled version for file:// protocol compatibility -->
+    <!-- For production with HTTP server, use: <script type="module" src="src/main.js"></script> -->
+    <script src="app-bundle.js"></script>
+</body>
+
+</html>
