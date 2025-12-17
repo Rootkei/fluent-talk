@@ -4,8 +4,13 @@
 // ========== Configuration ==========
 
 const CONFIG = {
-    WS_URL: 'ws://localhost:8080/ws',
-    BACKEND_URL: 'http://localhost:8080',
+    // Auto-detect environment
+    WS_URL: window.location.hostname === 'localhost'
+        ? 'ws://localhost:8080/ws'
+        : 'wss://fluent-talk.onrender.com/ws',  // Production backend
+    BACKEND_URL: window.location.hostname === 'localhost'
+        ? 'http://localhost:8080'
+        : 'https://fluent-talk.onrender.com',  // Production backend
     RECONNECT_INTERVAL: 5000,
     SPEECH_RATE: 1.0
 };
