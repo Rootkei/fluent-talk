@@ -59,6 +59,17 @@
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
     animation: slideUp 0.3s ease;
     overflow-y: auto;
+
+    /* Hide scrollbar but keep functionality */
+    scrollbar-width: none;
+    /* Firefox */
+    -ms-overflow-style: none;
+    /* IE and Edge */
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.coffee-modal-content::-webkit-scrollbar {
+    display: none;
 }
 
 .coffee-modal-close {
