@@ -53,10 +53,12 @@
     border-radius: 20px;
     padding: 2rem;
     max-width: 500px;
+    max-height: 90vh;
     width: 90%;
     position: relative;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
     animation: slideUp 0.3s ease;
+    overflow-y: auto;
 }
 
 .coffee-modal-close {
