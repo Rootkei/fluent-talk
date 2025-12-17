@@ -1,160 +1,230 @@
-# Real-Time AI Chat Application
+# English Voice Chat - AI-Powered Speaking Practice
 
-Ứng dụng chat real-time với AI Groq, sử dụng WebSocket để giao tiếp giữa frontend và backend.
+A real-time English conversation practice application powered by AI, featuring voice activity detection, phrase highlighting, and role-play scenarios.
 
-## 🚀 Tính năng
+![Build](https://github.com/Rootkei/fluent-talk/workflows/Build%20and%20Test/badge.svg)
+![License](https://img.shields.io/badge/license-MIT-blue.svg)
 
-- ✨ Giao diện hiện đại với glassmorphism và gradient
-- 💬 Chat real-time với AI Groq (Llama 3.3 70B)
-- 🔄 Tự động kết nối lại khi mất kết nối
-- 📱 Responsive design cho mọi thiết bị
-- ⚡ WebSocket cho hiệu suất cao
-- 🎨 Animations mượt mà và hiệu ứng đẹp mắt
+## ✨ Features
 
-## 🛠️ Công nghệ sử dụng
+### Core Features
+- 🎤 **Voice Activity Detection (VAD)** - Automatic speech detection
+- 🗣️ **Groq Whisper API** - High-accuracy English transcription
+- 🔊 **Text-to-Speech** - Natural English voice responses
+- 💬 **Real-time Chat** - WebSocket-based communication
+- 🎯 **Topic & Level Selection** - Customize conversation context (A1-C2)
 
-### Backend
-- **Golang** - WebSocket server
-- **gorilla/websocket** - WebSocket implementation
-- **Groq API** - AI chat với Llama 3.3 70B
+### Learning Features
+- 💡 **Phrase Highlighter** - AI marks useful phrases automatically
+- 📚 **Phrase Bank** - Save and categorize important expressions
+- 🎭 **Role-Play Scenarios** - Practice 12 real-world situations:
+  - Restaurant, Airport, Interview, Shopping
+  - Hotel, Doctor, Bank, Taxi
+  - Phone Call, Meeting, Party, Complaint
 
-### Frontend
-- **HTML5** - Cấu trúc semantic
-- **CSS3** - Styling hiện đại với animations
-- **Vanilla JavaScript** - WebSocket client
+### UI/UX
+- 🌓 **Dark/Light Theme** - Toggle between themes
+- 📱 **Fully Responsive** - Works on desktop, tablet, mobile
+- 🔍 **Search Messages** - Find past conversations
+- ⚙️ **Customizable Settings** - Voice gender, speech rate, sound effects
+- 🎨 **Modern Design** - Glassmorphism, smooth animations
 
-## 📋 Yêu cầu
+## 🚀 Quick Start
 
-- Go 1.21 trở lên
-- Groq API Key (đăng ký tại [console.groq.com](https://console.groq.com))
-- Trình duyệt web hiện đại
+### Prerequisites
+- Go 1.21 or higher
+- Groq API key ([Get it here](https://console.groq.com))
+- Modern web browser
 
-## 🔧 Cài đặt
+### Installation
 
-### 1. Clone repository
-
+1. **Clone the repository**
 ```bash
-cd c:\Mine\test
+git clone https://github.com/Rootkei/fluent-talk.git
+cd fluent-talk
 ```
 
-### 2. Cấu hình Backend
-
+2. **Setup Backend**
 ```bash
 cd backend
-
-# Tạo file .env từ template
-copy .env.example .env
-
-# Chỉnh sửa .env và thêm Groq API key của bạn
-# GROQ_API_KEY=your_actual_api_key_here
-# PORT=8080
-```
-
-### 3. Cài đặt dependencies
-
-```bash
+cp .env.example .env
+# Edit .env and add your GROQ_API_KEY
 go mod download
 ```
 
-## 🚀 Chạy ứng dụng
+3. **Run the server**
+```bash
+go run cmd/server/main.go
+```
 
-### 1. Khởi động Backend
+4. **Open Frontend**
+```bash
+# Open in browser
+http://localhost:5500/frontend/index.html
 
+# Or use Live Server extension in VS Code
+```
+
+## 📁 Project Structure
+
+```
+.
+├── backend/
+│   ├── cmd/
+│   │   └── server/
+│   │       └── main.go          # Entry point
+│   ├── internal/
+│   │   ├── domain/              # Business logic
+│   │   ├── infrastructure/      # External services
+│   │   │   ├── ai/              # Groq AI client
+│   │   │   └── config/          # Configuration
+│   │   └── interfaces/          # HTTP handlers
+│   │       └── http/
+│   ├── go.mod
+│   ├── Dockerfile
+│   └── .env.example
+│
+├── frontend/
+│   ├── index.html               # Main entry
+│   ├── app-premium.js           # Main controller
+│   └── assets/
+│       ├── css/                 # Stylesheets
+│       │   ├── premium.css
+│       │   ├── phrase-highlighter.css
+│       │   └── scenarios.css
+│       └── js/                  # JavaScript modules
+│           ├── advanced-features.js
+│           ├── phrase-scenarios.js
+│           └── polish.js
+│
+└── .github/
+    └── workflows/               # CI/CD pipelines
+        ├── build.yml
+        ├── deploy.yml
+        ├── pages.yml
+        └── release.yml
+```
+
+## 🔧 Configuration
+
+### Backend (.env)
+```env
+GROQ_API_KEY=your_api_key_here
+GROQ_MODEL=llama-3.3-70b-versatile
+PORT=8080
+```
+
+### Frontend
+No configuration needed. All settings available in UI.
+
+## 🎯 Usage
+
+### Basic Conversation
+1. Click the microphone button
+2. Speak in English
+3. AI responds with helpful feedback
+4. Click highlighted phrases to save them
+
+### Role-Play Practice
+1. Click 🎭 button
+2. Choose a scenario (e.g., Restaurant)
+3. AI acts as the character
+4. Practice real-world conversations
+
+### Phrase Learning
+1. AI highlights useful phrases in yellow
+2. Click to save to your phrase bank
+3. Access saved phrases via 💡 button
+4. Search and filter by category
+
+## 🚀 Deployment
+
+### Production Deployment
+
+**Backend Options:**
+- [Render.com](./RENDER_DEPLOYMENT.md) - Easiest, free tier available
+- [AWS](./AWS_DEPLOYMENT.md) - Multiple options (EC2, App Runner, ECS, Elastic Beanstalk)
+- [Northflank](./NORTHFLANK_DEPLOYMENT.md) - Developer-friendly platform
+
+**Frontend:**
+- [GitHub Pages](/.github/workflows/PAGES_README.md) - Free static hosting
+
+**Current Production:**
+- Backend: https://fluent-talk.onrender.com
+- Frontend: https://rootkei.github.io/fluent-talk/
+
+### Local Development
+
+```bash
+# Backend
+cd backend
+go run cmd/server/main.go
+
+# Frontend
+# Use Live Server or any static file server
+# Open http://localhost:5500/frontend/index.html
+```
+
+## 🛠️ Development
+
+### Run Tests
 ```bash
 cd backend
-go run main.go
+go test -v ./...
 ```
 
-Server sẽ chạy tại `http://localhost:8080`
-
-### 2. Mở Frontend
-
-Mở file `frontend/index.html` trong trình duyệt web của bạn, hoặc sử dụng Live Server:
-
+### Build for Production
 ```bash
-cd frontend
-# Mở index.html bằng trình duyệt hoặc Live Server
+cd backend
+go build -o server cmd/server/main.go
 ```
 
-## 📝 Cấu trúc thư mục
-
-```
-c:\Mine\test\
-├── backend/
-│   ├── main.go           # WebSocket server và Groq API integration
-│   ├── go.mod            # Go dependencies
-│   ├── .env.example      # Environment variables template
-│   └── .env              # Your actual environment variables (create this)
-├── frontend/
-│   ├── index.html        # HTML structure
-│   ├── style.css         # Styling và animations
-│   └── app.js            # WebSocket client logic
-└── README.md             # Documentation
+### Lint Code
+```bash
+golangci-lint run ./...
 ```
 
-## 🔑 Lấy Groq API Key
+## 📦 Docker
 
-1. Truy cập [console.groq.com](https://console.groq.com)
-2. Đăng ký/đăng nhập tài khoản
-3. Tạo API key mới
-4. Copy API key và paste vào file `.env`
-
-## 💡 Sử dụng
-
-1. Đảm bảo backend đang chạy
-2. Mở frontend trong trình duyệt
-3. Đợi status indicator hiển thị "Đã kết nối"
-4. Nhập tin nhắn và nhấn Enter hoặc click nút gửi
-5. AI sẽ phản hồi trong thời gian thực
-
-## 🎨 Tùy chỉnh
-
-### Thay đổi model AI
-
-Trong `backend/main.go`, tìm dòng:
-
-```go
-Model: "llama-3.3-70b-versatile",
+### Build Image
+```bash
+cd backend
+docker build -t english-voice-chat .
 ```
 
-Thay đổi thành model khác của Groq (ví dụ: `mixtral-8x7b-32768`)
-
-### Thay đổi port
-
-Trong file `.env`:
-
-```env
-PORT=8080  # Thay đổi thành port bạn muốn
+### Run Container
+```bash
+docker run -p 8080:8080 \
+  -e GROQ_API_KEY=your_key \
+  english-voice-chat
 ```
 
-Và trong `frontend/app.js`:
+## 🤝 Contributing
 
-```javascript
-const WS_URL = 'ws://localhost:8080/ws';  // Cập nhật port tương ứng
-```
+Contributions are welcome! Please:
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Submit a pull request
 
-## 🐛 Xử lý lỗi
+## 📝 License
 
-### Backend không kết nối được
+This project is licensed under the MIT License.
 
-- Kiểm tra GROQ_API_KEY trong file `.env`
-- Đảm bảo port 8080 không bị sử dụng bởi ứng dụng khác
-- Kiểm tra logs trong terminal
+## 🙏 Acknowledgments
 
-### Frontend không kết nối WebSocket
+- [Groq](https://groq.com) - AI inference platform
+- [Whisper](https://openai.com/research/whisper) - Speech recognition
+- Web Speech API - Text-to-speech
 
-- Đảm bảo backend đang chạy
-- Kiểm tra URL WebSocket trong `app.js`
-- Mở Developer Console để xem lỗi
+## 📧 Contact
 
-## 📄 License
+For questions or support, please open an issue on GitHub.
 
-MIT License - Tự do sử dụng cho mục đích cá nhân và thương mại.
+## 🌟 Star History
 
-## 🤝 Đóng góp
+If you find this project helpful, please consider giving it a star!
 
-Mọi đóng góp đều được hoan nghênh! Hãy tạo issue hoặc pull request.
+---
 
-## 📧 Liên hệ
-
-Nếu có câu hỏi hoặc góp ý, vui lòng tạo issue trên repository.
+**Made with ❤️ for English learners worldwide**
