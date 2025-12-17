@@ -679,11 +679,12 @@ class PremiumVoiceController {
             // Remove typing indicator if exists
             this.removeTypingIndicator();
 
-            // Display only English (no Vietnamese subtitle)
+            // Display with HTML (for phrase highlighting)
             this.addMessage('ai', content);
 
-            // Speak English
-            this.voice.speak(content);
+            // Strip HTML tags for speech (avoid reading markup)
+            const textOnly = content.replace(/<[^>]*>/g, '').replace(/\*\*/g, '');
+            this.voice.speak(textOnly);
         }
     }
 
