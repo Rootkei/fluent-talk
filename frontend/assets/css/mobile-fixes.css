@@ -1,0 +1,99 @@
+/* Mobile UI Fixes - Clean Layout */
+
+/* Fix bottom controls overlapping on mobile */
+@media (max-width: 768px) {
+
+    /* Ensure proper spacing for bottom elements */
+    .chat-input-area {
+        padding-bottom: calc(env(safe-area-inset-bottom) + 12px);
+        min-height: 70px;
+    }
+
+    /* Fix floating coffee button position */
+    .floating-coffee-btn {
+        bottom: calc(env(safe-area-inset-bottom) + 80px) !important;
+        z-index: 999;
+    }
+
+    /* Adjust interim transcript position */
+    .interim-transcript {
+        bottom: calc(env(safe-area-inset-bottom) + 90px);
+        z-index: 100;
+    }
+
+    /* Adjust voice level position */
+    .voice-level-container {
+        bottom: calc(env(safe-area-inset-bottom) + 75px);
+        z-index: 100;
+    }
+
+    /* Adjust waveform position */
+    .waveform-canvas {
+        bottom: calc(env(safe-area-inset-bottom) + 70px);
+        z-index: 100;
+    }
+
+    /* Adjust scroll button position */
+    .scroll-bottom-btn {
+        bottom: calc(env(safe-area-inset-bottom) + 75px);
+        z-index: 100;
+    }
+
+    /* Fix toolbar buttons spacing */
+    .bottom-toolbar {
+        padding: 8px 12px calc(env(safe-area-inset-bottom) + 8px);
+        gap: 8px;
+    }
+
+    .toolbar-btn {
+        min-width: 40px;
+        min-height: 40px;
+        padding: 8px;
+        font-size: 18px;
+    }
+
+    /* Ensure chat messages don't go under controls */
+    .chat-messages {
+        padding-bottom: calc(env(safe-area-inset-bottom) + 20px);
+    }
+}
+
+/* Extra small phones - even more compact */
+@media (max-width: 480px) {
+    .floating-coffee-btn {
+        bottom: calc(env(safe-area-inset-bottom) + 70px) !important;
+        width: 40px !important;
+        height: 40px !important;
+    }
+
+    .toolbar-btn {
+        min-width: 36px;
+        min-height: 36px;
+        padding: 6px;
+        font-size: 16px;
+    }
+
+    .bottom-toolbar {
+        padding: 6px 10px calc(env(safe-area-inset-bottom) + 6px);
+        gap: 6px;
+    }
+}
+
+/* Landscape mode - more compact */
+@media (max-width: 768px) and (orientation: landscape) {
+    .floating-coffee-btn {
+        bottom: calc(env(safe-area-inset-bottom) + 60px) !important;
+        width: 38px !important;
+        height: 38px !important;
+    }
+
+    .chat-input-area {
+        min-height: 60px;
+        padding: 8px 12px calc(env(safe-area-inset-bottom) + 8px);
+    }
+
+    .toolbar-btn {
+        min-width: 36px;
+        min-height: 36px;
+    }
+}
