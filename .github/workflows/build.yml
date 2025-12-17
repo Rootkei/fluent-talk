@@ -123,7 +123,7 @@ jobs:
       with:
         version: latest
         working-directory: ./backend
-        args: --timeout=5m
+        args: --config=.golangci.yml --timeout=5m
         
   security:
     name: Security Scan

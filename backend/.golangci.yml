@@ -1,0 +1,42 @@
+linters:
+  enable:
+    - errcheck
+    - gosimple
+    - govet
+    - ineffassign
+    - staticcheck
+    - unused
+  disable:
+    - structcheck
+    - varcheck
+    - deadcode
+    - golint
+    - interfacer
+    - maligned
+    - scopelint
+
+linters-settings:
+  errcheck:
+    check-blank: false
+  govet:
+    check-shadowing: false
+  staticcheck:
+    checks: ["all"]
+
+issues:
+  exclude-use-default: false
+  max-issues-per-linter: 0
+  max-same-issues: 0
+  
+run:
+  timeout: 5m
+  skip-dirs:
+    - vendor
+    - tmp
+  skip-files:
+    - ".*_test.go"
+
+output:
+  format: colored-line-number
+  print-issued-lines: true
+  print-linter-name: true
