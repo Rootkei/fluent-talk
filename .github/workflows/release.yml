@@ -1,0 +1,83 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+jobs:
+  create-release:
+    name: Create Release
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Set up Go
+      uses: actions/setup-go@v4
+      with:
+        go-version: '1.21'
+        
+    - name: Build for multiple platforms
+      working-directory: ./backend
+      run: |
+        # Linux
+        GOOS=linux GOARCH=amd64 go build -ldflags="-w -s" -o builds/server-linux-amd64 cmd/server/main.go
+        
+        # Windows
+        GOOS=windows GOARCH=amd64 go build -ldflags="-w -s" -o builds/server-windows-amd64.exe cmd/server/main.go
+        
+        # macOS
+        GOOS=darwin GOARCH=amd64 go build -ldflags="-w -s" -o builds/server-darwin-amd64 cmd/server/main.go
+        GOOS=darwin GOARCH=arm64 go build -ldflags="-w -s" -o builds/server-darwin-arm64 cmd/server/main.go
+        
+    - name: Create release package
+      run: |
+        mkdir -p release
+        
+        # Linux package
+        tar -czf release/english-voice-chat-linux-amd64.tar.gz \
+          backend/builds/server-linux-amd64 \
+          frontend/ \
+          backend/.env.example \
+          README.md
+          
+        # Windows package
+        zip -r release/english-voice-chat-windows-amd64.zip \
+          backend/builds/server-windows-amd64.exe \
+          frontend/ \
+          backend/.env.example \
+          README.md
+          
+        # macOS Intel package
+        tar -czf release/english-voice-chat-darwin-amd64.tar.gz \
+          backend/builds/server-darwin-amd64 \
+          frontend/ \
+          backend/.env.example \
+          README.md
+          
+        # macOS Apple Silicon package
+        tar -czf release/english-voice-chat-darwin-arm64.tar.gz \
+          backend/builds/server-darwin-arm64 \
+          frontend/ \
+          backend/.env.example \
+          README.md
+          
+    - name: Generate changelog
+      id: changelog
+      run: |
+        echo "## What's Changed" > CHANGELOG.md
+        git log $(git describe --tags --abbrev=0 HEAD^)..HEAD --pretty=format:"- %s" >> CHANGELOG.md
+        
+    - name: Create GitHub Release
+      uses: softprops/action-gh-release@v1
+      with:
+        files: |
+          release/*.tar.gz
+          release/*.zip
+        body_path: CHANGELOG.md
+        draft: false
+        prerelease: false
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -1,0 +1,55 @@
+name: Deploy to Production
+
+on:
+  push:
+    branches: [ main ]
+    tags:
+      - 'v*'
+
+jobs:
+  build-and-deploy:
+    name: Build and Deploy
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Set up Go
+      uses: actions/setup-go@v4
+      with:
+        go-version: '1.21'
+        
+    - name: Build backend
+      working-directory: ./backend
+      run: |
+        CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build \
+          -ldflags="-w -s" \
+          -o server \
+          cmd/server/main.go
+          
+    - name: Create deployment package
+      run: |
+        mkdir -p deploy
+        cp -r backend/server deploy/
+        cp -r frontend deploy/
+        cp backend/.env.example deploy/.env
+        
+    - name: Upload deployment artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: deployment-package
+        path: deploy/
+        
+    # Optional: Deploy to server via SSH
+    - name: Deploy to server
+      if: github.ref == 'refs/heads/main'
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.DEPLOY_HOST }}
+        username: ${{ secrets.DEPLOY_USER }}
+        key: ${{ secrets.DEPLOY_KEY }}
+        script: |
+          cd /var/www/english-voice-chat
+          git pull origin main
+          systemctl restart english-voice-chat

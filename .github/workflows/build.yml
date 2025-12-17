@@ -1,0 +1,146 @@
+name: Build and Test
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  backend:
+    name: Build Backend
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Set up Go
+      uses: actions/setup-go@v4
+      with:
+        go-version: '1.21'
+        
+    - name: Cache Go modules
+      uses: actions/cache@v3
+      with:
+        path: ~/go/pkg/mod
+        key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+        restore-keys: |
+          ${{ runner.os }}-go-
+          
+    - name: Install dependencies
+      working-directory: ./backend
+      run: go mod download
+      
+    - name: Run go mod tidy
+      working-directory: ./backend
+      run: go mod tidy
+      
+    - name: Verify go mod
+      working-directory: ./backend
+      run: |
+        go mod verify
+        git diff --exit-code go.mod go.sum
+        
+    - name: Run go vet
+      working-directory: ./backend
+      run: go vet ./...
+      
+    - name: Build backend
+      working-directory: ./backend
+      run: go build -v -o server cmd/server/main.go
+      
+    - name: Run tests
+      working-directory: ./backend
+      run: go test -v -race -coverprofile=coverage.out ./...
+      
+    - name: Upload coverage
+      uses: codecov/codecov-action@v3
+      with:
+        files: ./backend/coverage.out
+        flags: backend
+        
+  frontend:
+    name: Build Frontend
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Validate HTML
+      working-directory: ./frontend
+      run: |
+        echo "Checking HTML syntax..."
+        # Simple validation - check if files exist and are not empty
+        test -s index.html
+        
+    - name: Validate JavaScript
+      working-directory: ./frontend
+      run: |
+        echo "Checking JavaScript syntax..."
+        # Check for syntax errors using node
+        node -c app-premium.js
+        node -c assets/js/advanced-features.js
+        node -c assets/js/phrase-scenarios.js
+        node -c assets/js/polish.js
+        
+    - name: Check CSS
+      working-directory: ./frontend
+      run: |
+        echo "Checking CSS files..."
+        # Verify CSS files exist
+        ls -la assets/css/
+        
+    - name: Create artifact
+      run: |
+        mkdir -p dist
+        cp -r frontend/* dist/
+        
+    - name: Upload frontend artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: frontend-build
+        path: dist/
+        retention-days: 7
+        
+  lint:
+    name: Lint Code
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Set up Go
+      uses: actions/setup-go@v4
+      with:
+        go-version: '1.21'
+        
+    - name: Run golangci-lint
+      uses: golangci/golangci-lint-action@v3
+      with:
+        version: latest
+        working-directory: ./backend
+        args: --timeout=5m
+        
+  security:
+    name: Security Scan
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Run Trivy vulnerability scanner
+      uses: aquasecurity/trivy-action@master
+      with:
+        scan-type: 'fs'
+        scan-ref: './backend'
+        format: 'sarif'
+        output: 'trivy-results.sarif'
+        
+    - name: Upload Trivy results to GitHub Security
+      uses: github/codeql-action/upload-sarif@v2
+      with:
+        sarif_file: 'trivy-results.sarif'
