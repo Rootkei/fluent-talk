@@ -41,9 +41,10 @@ jobs:
         name: deployment-package
         path: deploy/
         
-    # Optional: Deploy to server via SSH
+    # Optional: Deploy to server via SSH (requires secrets to be configured)
     - name: Deploy to server
       if: github.ref == 'refs/heads/main'
+      continue-on-error: true  # Don't fail if secrets not configured
       uses: appleboy/ssh-action@master
       with:
         host: ${{ secrets.DEPLOY_HOST }}
