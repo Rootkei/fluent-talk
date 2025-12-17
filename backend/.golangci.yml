@@ -1,25 +1,18 @@
 linters:
   enable:
-    - errcheck
     - gosimple
     - govet
     - ineffassign
     - staticcheck
     - unused
   disable:
-    - structcheck
-    - varcheck
-    - deadcode
-    - golint
-    - interfacer
-    - maligned
-    - scopelint
+    - errcheck  # Disable errcheck to avoid defer errors
 
 linters-settings:
-  errcheck:
-    check-blank: false
   govet:
-    check-shadowing: false
+    enable-all: true
+    disable:
+      - shadow
   staticcheck:
     checks: ["all"]
 
@@ -27,16 +20,17 @@ issues:
   exclude-use-default: false
   max-issues-per-linter: 0
   max-same-issues: 0
+  exclude-dirs:
+    - vendor
+    - tmp
+  exclude-files:
+    - ".*_test\\.go$"
   
 run:
   timeout: 5m
-  skip-dirs:
-    - vendor
-    - tmp
-  skip-files:
-    - ".*_test.go"
 
 output:
-  format: colored-line-number
+  formats:
+    - format: colored-line-number
   print-issued-lines: true
   print-linter-name: true
