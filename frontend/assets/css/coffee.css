@@ -141,24 +141,6 @@
 
 /* Mobile Responsive */
 @media (max-width: 768px) {
-    .app-footer {
-        padding: 0.4rem 0.75rem;
-    }
-
-    .footer-content {
-        gap: 0.5rem;
-    }
-
-    .footer-text {
-        font-size: 0.7rem;
-    }
-
-    .coffee-icon-btn {
-        width: 24px;
-        height: 24px;
-        font-size: 0.8rem;
-    }
-
     .floating-coffee-btn {
         width: 45px;
         height: 45px;
@@ -168,11 +150,66 @@
     }
 
     .coffee-modal-content {
-        padding: 1.5rem;
-        max-width: 95%;
+        padding: 1rem;
+        max-width: 90%;
+        max-height: 85vh;
+        overflow-y: auto;
     }
 
     .coffee-modal-content h3 {
-        font-size: 1.3rem;
+        font-size: 1.2rem;
+        margin-bottom: 0.75rem;
+    }
+
+    .coffee-modal-content p {
+        font-size: 0.9rem;
+        margin-bottom: 1rem;
+    }
+
+    .coffee-qr-container {
+        padding: 0.75rem;
+        margin: 1rem 0;
+    }
+
+    .coffee-thank-you {
+        font-size: 1rem;
+        margin-top: 0.75rem !important;
+    }
+
+    .coffee-modal-close {
+        width: 28px;
+        height: 28px;
+        font-size: 1rem;
+        top: 0.75rem;
+        right: 0.75rem;
+    }
+}
+
+/* Extra small screens */
+@media (max-width: 480px) {
+    .floating-coffee-btn {
+        width: 40px;
+        height: 40px;
+        font-size: 1.2rem;
+        bottom: 12px;
+        right: 12px;
+    }
+
+    .coffee-modal-content {
+        padding: 0.75rem;
+        max-width: 95%;
+        max-height: 90vh;
+    }
+
+    .coffee-modal-content h3 {
+        font-size: 1.1rem;
+    }
+
+    .coffee-modal-content p {
+        font-size: 0.85rem;
+    }
+
+    .coffee-qr-container {
+        padding: 0.5rem;
     }
 }
