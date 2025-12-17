@@ -1,0 +1,19 @@
+services:
+  # Backend Web Service
+  - type: web
+    name: english-voice-chat-backend
+    runtime: go
+    region: oregon  # or frankfurt for EU
+    plan: free
+    branch: main
+    rootDir: backend
+    buildCommand: go build -o server cmd/server/main.go
+    startCommand: ./server
+    healthCheckPath: /health
+    envVars:
+      - key: GROQ_API_KEY
+        sync: false  # Set manually in dashboard
+      - key: GROQ_MODEL
+        value: llama-3.3-70b-versatile
+      - key: PORT
+        value: 10000
