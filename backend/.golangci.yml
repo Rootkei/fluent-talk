@@ -13,6 +13,7 @@ linters-settings:
     enable-all: true
     disable:
       - shadow
+      - fieldalignment  # Disable struct field alignment optimization warnings
   staticcheck:
     checks: ["all"]
 
