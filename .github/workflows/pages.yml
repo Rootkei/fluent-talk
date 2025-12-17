@@ -1,0 +1,57 @@
+name: Deploy Frontend to GitHub Pages
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:  # Allow manual trigger
+
+# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Allow only one concurrent deployment
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Deploy to GitHub Pages
+    runs-on: ubuntu-latest
+    
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Pages
+      uses: actions/configure-pages@v4
+      
+    - name: Prepare frontend files
+      run: |
+        # Create deployment directory
+        mkdir -p _site
+        
+        # Copy frontend files
+        cp -r frontend/* _site/
+        
+        # Create .nojekyll to prevent Jekyll processing
+        touch _site/.nojekyll
+        
+        # Update backend URL for GitHub Pages (if needed)
+        # Uncomment and modify if you need to change backend URL
+        # sed -i 's|ws://localhost:8080|wss://your-backend-url.com|g' _site/app-premium.js
+        
+    - name: Upload artifact
+      uses: actions/upload-pages-artifact@v3
+      with:
+        path: '_site'
+        
+    - name: Deploy to GitHub Pages
+      id: deployment
+      uses: actions/deploy-pages@v4
